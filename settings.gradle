@@ -1,0 +1,3 @@
+rootProject.name = "FamilyMultiAdsNetworks"
+include ':app'
+include ':FamilyMultiAds'
