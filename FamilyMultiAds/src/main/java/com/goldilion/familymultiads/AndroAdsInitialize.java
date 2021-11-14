@@ -80,6 +80,36 @@ public class AndroAdsInitialize {
         }
     }
 
+    public static void SelectAdsGoogleAds(Activity activity, String selectAdsBackup, String idInitialize) {
+        MobileAds.initialize(activity, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                Map<String, AdapterStatus> statusMap = initializationStatus.getAdapterStatusMap();
+                for (String adapterClass : statusMap.keySet()) {
+                    AdapterStatus status = statusMap.get(adapterClass);
+                    Log.d("MyApp", String.format(
+                            "Adapter name: %s, Description: %s, Latency: %d",
+                            adapterClass, status.getDescription(), status.getLatency()));
+                }
+            }
+        });
+        switch (selectAdsBackup) {
+            case "APPLOVIN-M":
+                //AdSettings.setDataProcessingOptions(new String[]{});
+                AppLovinSdk.getInstance(activity).setMediationProvider(AppLovinMediationProvider.MAX);
+                AppLovinSdk sdk = AppLovinSdk.getInstance(activity);
+                sdk.getSettings().setMuted(!sdk.getSettings().isMuted());
+                break;
+            case "IRON":
+                IronSource.init(activity, idInitialize);
+                IntegrationHelper.validateIntegration(activity);
+                break;
+            case "APPLOVIN-D":
+                AppLovinSdk.initializeSdk(activity);
+                break;
+        }
+    }
+
     public static void SelectAdsApplovinDis(Activity activity, String selectAdsBackup, String idInitialize) {
         AppLovinSdk.initializeSdk(activity);
         switch (selectAdsBackup) {
@@ -93,7 +123,8 @@ public class AndroAdsInitialize {
                 IronSource.init(activity, idInitialize);
                 IntegrationHelper.validateIntegration(activity);
                 break;
-            case "ADMOB" :
+            case "ADMOB":
+            case "GOOGLE-ADS":
                 MobileAds.initialize(activity, new OnInitializationCompleteListener() {
                     @Override
                     public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -123,7 +154,8 @@ public class AndroAdsInitialize {
                 IronSource.init(activity, idInitialize);
                 IntegrationHelper.validateIntegration(activity);
                 break;
-            case "ADMOB" :
+            case "ADMOB":
+            case "GOOGLE-ADS":
                 MobileAds.initialize(activity, new OnInitializationCompleteListener() {
                     @Override
                     public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -154,6 +186,7 @@ public class AndroAdsInitialize {
                 sdk.getSettings().setMuted(!sdk.getSettings().isMuted());
                 break;
             case "ADMOB":
+            case "GOOGLE-ADS":
                 MobileAds.initialize(activity, new OnInitializationCompleteListener() {
                     @Override
                     public void onInitializationComplete(InitializationStatus initializationStatus) {
